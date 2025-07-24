@@ -66,7 +66,7 @@
   <div id="message"></div>
 
   <script>
-    emailjs.init("WOuTCw2e9r_zjl9Cz"); // Replace with your actual EmailJS public key
+    emailjs.init("WOuTCw2e9r_zjl9Cz"); // Your EmailJS public key here
 
     const input = document.getElementById('emailInput');
     const actionBtn = document.getElementById('actionBtn');
@@ -117,8 +117,10 @@
       const userOTP = input.value.trim();
       if (userOTP === generatedOTP) {
         showMessage("OTP verified! Opening video...", "success");
-        openYouTubeVideo("btNtQfSYljw"); // Replace with your actual YouTube video ID
-        resetForm();
+        setTimeout(() => {
+          openYouTubeVideo("btNtQfSYljw");
+          resetForm();
+        }, 800);
       } else {
         showMessage("Incorrect OTP. Please try again.", "error");
       }
@@ -147,28 +149,15 @@
       const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
       if (isMobile) {
-        let appOpened = false;
-
-        function onVisibilityChange() {
-          if (document.hidden) {
-            appOpened = true;
-          }
-        }
-
-        document.addEventListener('visibilitychange', onVisibilityChange);
-
-        // Try opening YouTube app
+        const start = Date.now();
         window.location = youtubeAppUrl;
 
-        // Wait 10 seconds before fallback
         setTimeout(() => {
-          document.removeEventListener('visibilitychange', onVisibilityChange);
-          if (!appOpened) {
+          if (Date.now() - start < 2200) {
             window.location = youtubeWebUrl;
           }
-        }, 10000); // 10 seconds
+        }, 1500);
       } else {
-        // Desktop
         window.open(youtubeWebUrl, "_blank");
       }
     }
