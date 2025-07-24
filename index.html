@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Secure Video Access</title>
+  <title>Tea coffee</title>
   <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
   <style>
     :root {
@@ -60,7 +60,7 @@
 </head>
 <body>
 
-  <h2>Access the Secure Video</h2>
+  <h2>Tea Coffee</h2>
   <input type="email" id="emailInput" placeholder="Enter your email" required />
   <button id="actionBtn">Send OTP</button>
   <div id="message"></div>
@@ -148,19 +148,19 @@
       const youtubeWebUrl = `https://www.youtube.com/watch?v=${videoId}`;
       const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
-      if (isMobile) {
-        const start = Date.now();
-        window.location = youtubeAppUrl;
+        if (isMobile) {
+    const start = Date.now();
+    window.location = youtubeAppUrl;
 
-        setTimeout(() => {
-          if (Date.now() - start < 2200) {
-            window.location = youtubeWebUrl;
-          }
-        }, 1500);
-      } else {
-        window.open(youtubeWebUrl, "_blank");
+    setTimeout(() => {
+      if (Date.now() - start < 6200) {
+        window.location = youtubeWebUrl;
       }
-    }
+    }, 6000); // Wait 6 seconds before checking
+  } else {
+    window.open(youtubeWebUrl, "_blank");
+  }
+}
   </script>
 </body>
 </html>
