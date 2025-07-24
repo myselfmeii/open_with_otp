@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Secure Video Access</title>
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+  <style>
+    :root {
+      --main-color: #2d89ef;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      padding: 20px;
+      margin: 0;
+      background: #f4f4f4;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+    h2 {
+      text-align: center;
+      color: var(--main-color);
+    }
+    input {
+      padding: 12px;
+      font-size: 16px;
+      margin: 10px 0;
+      width: 100%;
+      max-width: 400px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      padding: 12px 20px;
+      font-size: 16px;
+      background-color: var(--main-color);
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 10px 0;
+      width: 100%;
+      max-width: 400px;
+    }
+    button:hover {
+      background-color: #1e5aa8;
+    }
+    #message {
+      text-align: center;
+      margin-top: 10px;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Access the Secure Video</h2>
+  <input type="email" id="emailInput" placeholder="Enter your email" required />
+  <button id="actionBtn">Send OTP</button>
+  <div id="message"></div>
+
+  <script>
+    emailjs.init("WOuTCw2e9r_zjl9Cz"); // Your EmailJS public key here
+
+    const input = document.getElementById('emailInput');
+    const actionBtn = document.getElementById('actionBtn');
+    const messageDiv = document.getElementById('message');
+
+    let generatedOTP = "";
+    let step = "email"; // "email" or "otp"
+
+    actionBtn.addEventListener('click', () => {
+      if (step === "email") {
+        sendOTP();
+      } else {
+        verifyOTP();
+      }
+    });
+
+    function sendOTP() {
+      const email = input.value.trim();
+      if (!email || !validateEmail(email)) {
+        showMessage("Please enter a valid email.", "error");
+        return;
+      }
+
+      generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
+
+      const templateParams = {
+        to_email: email,
+        otp: generatedOTP,
+        email: email
+      };
+
+      emailjs.send("service_mx6tfor", "template_qm8gjyb", templateParams)
+        .then(() => {
+          showMessage("OTP sent to your email. Please enter it below.", "success");
+          input.value = "";
+          input.placeholder = "Enter OTP";
+          input.type = "text";
+          step = "otp";
+          actionBtn.textContent = "Verify & Play";
+        })
+        .catch((error) => {
+          console.error("Failed to send OTP:", error);
+          showMessage("Failed to send OTP. Please try again later.", "error");
+        });
+    }
+
+    function verifyOTP() {
+      const userOTP = input.value.trim();
+      if (userOTP === generatedOTP) {
+        showMessage("OTP verified! Opening video...", "success");
+        openYouTubeVideo("btNtQfSYljw");
+        resetForm();
+      } else {
+        showMessage("Incorrect OTP. Please try again.", "error");
+      }
+    }
+
+    function resetForm() {
+      input.value = "";
+      input.placeholder = "Enter your email";
+      input.type = "email";
+      step = "email";
+      actionBtn.textContent = "Send OTP";
+    }
+
+    function showMessage(text, type) {
+      messageDiv.textContent = text;
+      messageDiv.style.color = type === "error" ? "red" : "green";
+    }
+
+    function validateEmail(email) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
+    function openYouTubeVideo(videoId) {
+      const youtubeAppUrl = `vnd.youtube://${videoId}`;
+      const youtubeWebUrl = `https://www.youtube.com/watch?v=${videoId}`;
+      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+      if (isMobile) {
+        let appOpened = false;
+
+        function onVisibilityChange() {
+          if (document.hidden) {
+            appOpened = true;
+          }
+        }
+
+        document.addEventListener('visibilitychange', onVisibilityChange);
+
+        window.location = youtubeAppUrl;
+
+        setTimeout(() => {
+          document.removeEventListener('visibilitychange', onVisibilityChange);
+          if (!appOpened) {
+            window.location = youtubeWebUrl;
+          }
+        }, 2000);
+      } else {
+        window.open(youtubeWebUrl, "_blank");
+      }
+    }
+  </script>
+</body>
+</html>
