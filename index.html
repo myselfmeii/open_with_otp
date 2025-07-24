@@ -117,7 +117,7 @@
       const userOTP = input.value.trim();
       if (userOTP === generatedOTP) {
         showMessage("OTP verified! Opening video...", "success");
-        openYouTubeVideo("btNtQfSYljw"); // Replace with your actual video ID
+        openYouTubeVideo("btNtQfSYljw"); // Replace with your actual YouTube video ID
         resetForm();
       } else {
         showMessage("Incorrect OTP. Please try again.", "error");
@@ -160,13 +160,13 @@
         // Try opening YouTube app
         window.location = youtubeAppUrl;
 
-        // Wait longer to detect app open
+        // Wait 10 seconds before fallback
         setTimeout(() => {
           document.removeEventListener('visibilitychange', onVisibilityChange);
           if (!appOpened) {
             window.location = youtubeWebUrl;
           }
-        }, 3500);
+        }, 10000); // 10 seconds
       } else {
         // Desktop
         window.open(youtubeWebUrl, "_blank");
